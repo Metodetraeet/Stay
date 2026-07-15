@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>Stay! (Animals Wait for Handlers)</name>
+  <author>Metodetraeet</author>
+  <packageId>metodetraeet.Stay</packageId>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <description>Ever ordered a handler to train your dog, then watched them chase it across half the map because it suddenly decided those 40x berries needed hauling right now?
+  
+With this simple mod, tamed animals now stop and wait ("stay!") when their handler approaches to train them, instead of wandering off and forcing the handler into a chase.
+  
+The animal must be within call range and in line of sight of the handler. Wild animals being tamed still behave like wild animals.
+
+Safe to add or remove mid-save.
+  </description>
+</ModMetaData>
