@@ -12,6 +12,8 @@ With this simple mod, tamed animals now stop and wait ("stay!") when their handl
   
 The animal must be within call range and in line of sight of the handler. Wild animals being tamed still behave like wild animals.
 
+The call range and the animal wait time is customizable in the mod settings.
+
 Safe to add or remove mid-save.
   </description>
 </ModMetaData>
