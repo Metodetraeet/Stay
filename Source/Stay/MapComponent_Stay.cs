@@ -12,9 +12,9 @@ public class MapComponent_Stay : MapComponent
 
     public override void MapComponentTick()
     {
-        StaySettings settings = StayMod.Settings;
-        
         if (Find.TickManager.TicksGame % CheckIntervalTicks != 0) return;
+        
+        StaySettings settings = StayMod.Settings;
 
         var colonists = map.mapPawns.FreeColonistsSpawned;
         for (int i = 0; i < colonists.Count; i++)
