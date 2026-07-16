@@ -7,13 +7,13 @@ namespace Stay;
 public class MapComponent_Stay : MapComponent
 {
     private const int CheckIntervalTicks = 30;
-    private const float CallRangeCells = 30f;
-    private const int StayDurationTicks = 300;
 
     public MapComponent_Stay(Map map) : base(map) { }
 
     public override void MapComponentTick()
     {
+        StaySettings settings = StayMod.Settings;
+        
         if (Find.TickManager.TicksGame % CheckIntervalTicks != 0) return;
 
         var colonists = map.mapPawns.FreeColonistsSpawned;
@@ -32,12 +32,11 @@ public class MapComponent_Stay : MapComponent
             JobDef animalJob = animal.CurJobDef;
             if (animalJob == JobDefOf.Wait || animalJob == JobDefOf.Wait_MaintainPosture) continue;
             if (animalJob == JobDefOf.Flee || animalJob == JobDefOf.FleeAndCower) continue;
-
-            if (!handler.Position.InHorDistOf(animal.Position, CallRangeCells)) continue;
+            if (!handler.Position.InHorDistOf(animal.Position, settings.callRangeCells)) continue;
             if (!GenSight.LineOfSight(handler.Position, animal.Position, map, skipFirstCell: true)) continue;
 
             Job stay = JobMaker.MakeJob(JobDefOf.Wait);
-            stay.expiryInterval = StayDurationTicks;
+            stay.expiryInterval = settings.stayDurationTicks;
             animal.jobs.StartJob(stay, JobCondition.InterruptForced);
         }
     }
