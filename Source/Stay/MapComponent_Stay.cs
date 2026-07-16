@@ -1,12 +1,17 @@
 using RimWorld;
 using Verse;
 using Verse.AI;
+using System.Collections.Generic;  
+using UnityEngine;
 
 namespace Stay;
 
 public class MapComponent_Stay : MapComponent
 {
     private const int CheckIntervalTicks = 30;
+    private const int TextCooldownTicks = 600;
+
+    private readonly Dictionary <int, int> lastTextTick = new ();
 
     public MapComponent_Stay(Map map) : base(map) { }
 
@@ -38,7 +43,18 @@ public class MapComponent_Stay : MapComponent
             Job stay = JobMaker.MakeJob(JobDefOf.Wait);
             stay.expiryInterval = settings.stayDurationTicks;
             animal.jobs.StartJob(stay, JobCondition.InterruptForced);
+
+            if (settings.showCallText) ThrowCallText(handler, animal);
         }
+    }
+
+    private void ThrowCallText(Pawn handler, Pawn animal)
+    {
+        int now = Find.TickManager.TicksGame;
+        if (lastTextTick.TryGetValue(animal.thingIDNumber, out int last) && now - last < TextCooldownTicks) return;
+        if (lastTextTick.Count > 200) lastTextTick.Clear();
+        lastTextTick[animal.thingIDNumber] = now;
+        MoteMaker.ThrowText(handler.DrawPos + new Vector3(0f, 0f, 0.65f), map, "Stay!", 2.2f);
     }
 }
 

@@ -7,12 +7,14 @@ public class StaySettings : ModSettings
 {
     public float callRangeCells = 30f;
     public int stayDurationTicks = 300;
+    public bool showCallText = true;
 
     public override void ExposeData()
     {
         base.ExposeData();
         Scribe_Values.Look(ref callRangeCells, "callRangeCells", 30f);
         Scribe_Values.Look(ref stayDurationTicks, "stayDurationTicks", 300);
+        Scribe_Values.Look(ref showCallText, "showCallText", true);
     }
 }
 
@@ -39,6 +41,9 @@ public class StayMod : Mod
             tooltip: "The duration for which the animal will stay after being called.");
         staySeconds = Mathf.Round(listing.Slider(staySeconds, 2f, 15f));
         Settings.stayDurationTicks = (int)(staySeconds * 60f);
+        listing.Gap();
+        listing.CheckboxLabeled("Show call text", ref Settings.showCallText,
+            tooltip: "Toggle to show a text message when a colonist calls an animal to stay.");
         listing.End();
     }
 }
