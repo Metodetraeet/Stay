@@ -1,7 +1,7 @@
 using RimWorld;
 using Verse;
 using Verse.AI;
-using System.Collections.Generic;  
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Stay;
@@ -34,15 +34,21 @@ public class MapComponent_Stay : MapComponent
             if (animal.pather == null || !animal.pather.Moving) continue;
             if (animal.Downed || animal.Dead || animal.InMentalState) continue;
             if (animal.roping != null && animal.roping.IsRoped) continue;
-            JobDef animalJob = animal.CurJobDef;
-            if (animalJob == JobDefOf.Wait || animalJob == JobDefOf.Wait_MaintainPosture) continue;
-            if (animalJob == JobDefOf.Flee || animalJob == JobDefOf.FleeAndCower) continue;
+            Job animalJob = animal.CurJob;
+            if (animalJob == null) continue;
+
+            JobDef animalJobDef = animalJob.def;
+            if (animalJobDef == JobDefOf.Wait || animalJobDef == JobDefOf.Wait_MaintainPosture) continue;
+            if (animalJobDef == JobDefOf.Flee || animalJobDef == JobDefOf.FleeAndCower) continue;
+            if (animalJob.playerForced) continue;
+            if (!animalJobDef.suspendable ||
+                !animalJobDef.casualInterruptible ||
+                !animalJobDef.playerInterruptible) continue;
+            if (animalJobDef.forceCompleteBeforeNextJob) continue;
             if (!handler.Position.InHorDistOf(animal.Position, settings.callRangeCells)) continue;
             if (!GenSight.LineOfSight(handler.Position, animal.Position, map, skipFirstCell: true)) continue;
 
-            Job stay = JobMaker.MakeJob(JobDefOf.Wait);
-            stay.expiryInterval = settings.stayDurationTicks;
-            animal.jobs.StartJob(stay, JobCondition.InterruptForced);
+            PawnUtility.ForceWait(animal, settings.stayDurationTicks, handler);
 
             if (settings.showCallText) ThrowCallText(handler, animal);
         }
