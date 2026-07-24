@@ -31,6 +31,7 @@ public class MapComponent_Stay : MapComponent
             Pawn animal = handler.CurJob?.targetA.Pawn;
             if (animal == null || !animal.Spawned || animal.Map != map) continue;
             if (animal.Faction != Faction.OfPlayer) continue;
+            if (settings.IsExcluded(animal.def)) continue;
             if (animal.pather == null || !animal.pather.Moving) continue;
             if (animal.Downed || animal.Dead || animal.InMentalState) continue;
             if (animal.roping != null && animal.roping.IsRoped) continue;
@@ -63,4 +64,3 @@ public class MapComponent_Stay : MapComponent
         MoteMaker.ThrowText(handler.DrawPos + new Vector3(0f, 0f, 0.65f), map, "Stay!", 2.2f);
     }
 }
-
